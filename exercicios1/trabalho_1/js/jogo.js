@@ -123,3 +123,18 @@ function shuffle(array) {
 
     return array;
 }
+
+function corrects() {
+    return rightImages.length;
+}
+
+function wrongs() {
+    return wrongImage.length
+}
+
+function points() {
+    if (corrects() === 0)
+        return 0;
+    else
+        return (corrects() / QUANTITY_TO_MEMORYZE * 100).toFixed(0);
+}

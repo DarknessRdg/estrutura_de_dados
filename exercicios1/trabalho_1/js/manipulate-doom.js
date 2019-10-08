@@ -6,12 +6,12 @@ const countDownDiv = document.querySelector('#countdown');
 let count = 5;
 let countDown = (nextFuntion, total) => setInterval(() => {
     countDownDiv.innerHTML = count;
-    setProgress(count / total);
+    setProgress( count / total);
 
     count --;
     if (count === -1)
         nextFuntion();
-}, 1);
+}, 1000);
 
 let countDownVar = countDown(startGame, 5);
 
@@ -32,20 +32,20 @@ function startGame() {
     memorize.classList.remove('hide');
     createMemorizeList();
 
-    count = 30;
+    count = 5;
     countDownVar = countDown(createMemorizeGame, 30);
 }
 
 
 function createMemorizeList() {
     document.querySelector('.progress').classList.remove('hide');
-    const carousel = document.querySelector('#memoraizeCarousel');
+    const carousel = document.querySelector('#memorizeCarousel');
     const ol = carousel.querySelector('ol');
     const carouselImages = carousel.querySelector('.carousel-inner');
 
     for (let i = 0; i < QUANTITY_TO_MEMORYZE; i++) {
         let li = document.createElement('li');
-        li.setAttribute('data-target', '#memoraizeCarousel');
+        li.setAttribute('data-target', '#memorizeCarousel');
         li.setAttribute('data-slide-to', i);
         if (i === 0)
             li.classList.add('active');
@@ -89,29 +89,38 @@ function createMemorizeGame() {
             return newImage;
         };
 
-        const mainDiv = document.querySelector('#memorize-game');
-        mainDiv.classList.remove('hide');
-
+        document.querySelector('#memorize-game').classList.remove('hide');
+        const mainDiv = document.querySelector('#memorize-game-items');
+        mainDiv.innerHTML = '';
 
         let listToChoose = createListToChoose();
         for (let i = 0; i < listToChoose.length; i++) {
             let distractor =  listToChoose[i];
             let newImage = createImage(distractor.imagePath, distractor.image);
-            console.log(newImage)
+            console.log(newImage);
             mainDiv.appendChild(newImage);
         }
 
-        clickImageListener()
+        clickImageListener();
+        count = 5;
+        countDownVar = countDown(createMemorizeGame, count);
     }
     else {   // nao tem mais imagem para memorizar
-
         finishGame();
     }
 }
 
 
 function finishGame() {
-    console.log('acabou');
+    const result = document.querySelector('#result');
+    document.querySelector('#memorize-game').classList.add('hide');
+    result.classList.remove('hide');
+    result.classList.add('d-flex');
+    clearInterval(countDownVar);
+
+    result.querySelector('#points').innerHTML = String(points()) + '%';
+    result.querySelector('#correct').innerHTML = corrects();
+    result.querySelector('#wrong').innerHTML = wrongs();
 }
 
 
@@ -122,6 +131,7 @@ function clickImageListener() {
             const id = img.getAttribute('id');
 
             handleImageHit(id);
+            createMemorizeGame()
         })
     })
 }
