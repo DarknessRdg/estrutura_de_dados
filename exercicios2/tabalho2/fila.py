@@ -2,36 +2,14 @@
 Arquivo para a implementação de uma fila
 """
 
-import sys
-
-
-class No:
-    """
-    Nó que representa cada celula da fila,
-    onde cada nó possui como atributo suas
-    coodenadas (x, y) e uma cor
-    """
-
-    def __init__(self, x, y, cor):
-        """Contrutor da classe"""
-        self.x, self.y = x, y
-        self.cor = cor
-        self.prox = None
-    
-    def __str__(self):
-        return f'({self.x}, {self.y})'
-    
-    def coodenadas(self):
-        """Metodo para retornas as coordenadas do no"""
-        return self.x, self.y
-
-
 class Fila:
-    def __init__(self):
+    def __init__(self, class_no):
         """Contrutor da fila"""
         self._len = 0
         self._inicio = None
         self._ultimo = None
+
+        self._class_no = class_no
     
     def __len__(self):
         """
@@ -51,7 +29,17 @@ class Fila:
                 string += ', '
             aux = aux.prox
         return '[' + string + ']'
-    
+
+    @property
+    def primeiro(self):
+        """property para pegar o primeiro elemento da fila"""
+        return self._inicio
+
+    @property
+    def ultimo(self):
+        """property para pegar o ultimo elemento da fila"""
+        return self._ultimo
+
     def esta_vazia(self):
         """
         Meotodo que rotorna booleano indicando se a fila esta
@@ -63,25 +51,24 @@ class Fila:
         """
         Metodo para adicionar um elemento na lista
         argr:
-            **kwargs, opcoes: x, y, cor
+            **kwargs, 
+                opcoes sao os paramentos do construtor
+                da class_no
         """
-        novo_no = No(**kwargs)
+        novo_no = self._class_no(**kwargs)
 
         if self.esta_vazia():
             self._inicio = novo_no
-            self._ultimo = novo_no
         else:
             self._ultimo.prox = novo_no
-            self._ultimo = novo_no
-
-
+        self._ultimo = novo_no
         self._len += 1
     
     def remove(self):
         """Metodo para remover primero elemto da fila"""
         primeiro = self._inicio
         if not self.esta_vazia():    
-            self.primeiro = self.primeiro.prox
+            self._inicio = primeiro.prox
             self._len -= 1
         
         return primeiro
