@@ -21,7 +21,7 @@ COLORS = [
     (255, 214, 0)  # yellow accent-4
 ]
 
-BACKGROUND_COLOR = (1, 1, 1)
+BACKGROUND_COLOR = (224, 247, 250)
 
 # GAME SETTINGS
 SCREEN = pygame.display.set_mode(RESOLUCAO.coordenadas())
