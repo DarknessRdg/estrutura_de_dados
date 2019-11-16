@@ -26,11 +26,15 @@ class Cobrinha:
         pygame.init()
         self.GAME_OVER = False
         self.cobrinha = Fila(class_no=CelulaDaCobra)
+        self.comidas = Fila(class_no=CelulaDaCobra)
         self.direcao = KEY_RIGHT
         self.TICK = 10
 
-        for i in range(10):
+        for i in range(20):
             self.add_celula_na_cobra()
+
+        for i in range(3):
+            self.adicionar_comida()
 
     def run(self):
         """Metodo que executa loop do jogo"""
@@ -73,6 +77,12 @@ class Cobrinha:
 
         SCREEN.fill(BACKGROUND_COLOR)
         aux = self.cobrinha.primeiro
+        while aux is not None:
+            COBRA_CELL_SURFACE.fill(aux.cor)
+            SCREEN.blit(COBRA_CELL_SURFACE, aux.coordenadas())
+            aux = aux.prox
+
+        aux = self.comidas.primeiro
         while aux is not None:
             COBRA_CELL_SURFACE.fill(aux.cor)
             SCREEN.blit(COBRA_CELL_SURFACE, aux.coordenadas())
@@ -134,6 +144,16 @@ class Cobrinha:
 
         self.cobrinha.insere(x=ponto.x, y=ponto.y, cor=cor)
 
+    def adicionar_comida(self):
+        """Metodo para adicionar uma comida em uma posicao aleatoria"""
+        cor = elemento_aleatorio(COLORS)
+        ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
+
+        while self.cobrinha.esta_presente(ponto):  # nao permitir colocar comida em cima da cobra
+            ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
+
+        self.comidas.insere(x=ponto.x, y=ponto.y + ESPACO_ENTRE_CELULAS, cor=cor)
+
     def get_proxima_posicao_da_cabeca(self):
         """
         Metodo para calcular a nova posicao da cabeca durante o movinto da cobrinha
@@ -168,10 +188,23 @@ class Cobrinha:
 
     def validar_posicao(self, posicao):
         """
-        Metado para verificar se a posicao da celula é válida e tratar casos inválidos
+        Metado para fazer todas as verificacoes da posicao
         """
         if self.cobrinha.esta_presente(posicao):
-            self.sair()
+            self.cobrinha.remove()  # remove a cabeca
+            if self.cobrinha.esta_vazia():
+                self.sair()
+
+        elif self.comidas.esta_presente(posicao):
+            nova_fila_de_comidas = Fila(class_no=CelulaDaCobra)
+            self.add_celula_na_cobra()
+
+            while self.comidas.esta_vazia() is False:
+                comida = self.comidas.remove()
+                if comida != posicao:
+                    nova_fila_de_comidas.insere(x=comida.x, y=comida.y, cor=comida.cor)
+            self.comidas = nova_fila_de_comidas
+            self.adicionar_comida()
 
 
 if __name__ == "__main__":
