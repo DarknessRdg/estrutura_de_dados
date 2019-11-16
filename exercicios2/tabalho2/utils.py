@@ -19,6 +19,18 @@ class Ponto:
         """Metodo chamado atraves da funcao print() do python"""
         return f'({self.x}, {self.y})'
 
+    def __eq__(self, other):
+        """
+        Metodo chamado quando um objeto Ponto() é comparado a outro
+        usando operador de igualdade. ex: Ponto() == Ponto()
+
+        Args:
+            other: outro objeto da classe Ponto
+        Returns:
+            boolean: Ponto() é igual ao outro Ponto() ?
+        """
+        return self.x == other.x and self.y == other.y
+
     def coordenadas(self):
         """Metodo para retornas as coordenadas do no"""
         return self.x, self.y

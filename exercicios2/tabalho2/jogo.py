@@ -29,7 +29,7 @@ class Cobrinha:
         self.direcao = KEY_RIGHT
         self.TICK = 10
 
-        for i in range(5):
+        for i in range(10):
             self.add_celula_na_cobra()
 
     def run(self):
@@ -79,14 +79,23 @@ class Cobrinha:
             aux = aux.prox
 
     def atualizar_posicao_da_cobrinha(self):
+        """Metodo para autializar a posicao de cada celula da cobrinha"""
+
         aux = self.cobrinha.primeiro
         posicao_anterior = aux.coordenadas()
 
-        proxima_posicao = self.get_proxima_posicao(aux)
-        aux.set_coordenadas(proxima_posicao.x, proxima_posicao.y)
+        proxima_posicao = self.get_proxima_posicao_da_cabeca()
+        self.validar_posicao(proxima_posicao)
+        # proxima posicao da cabeca (dependendo da direcao atual da cobra)
+        # em seguida, chama funcao para verificar se essa nova posicao é uma posicao
+        # já presente na cobrinha, ou seja, está passando por cima dela mesmas
+
+        aux.set_coordenadas(proxima_posicao.x, proxima_posicao.y)  # atualiza o primeiro
         aux = aux.prox
         while aux is not None:
             posicao_do_aux = aux.coordenadas()
+            # salvar posicao da celula, antes de altrar, para entao passar essa
+            # posicao antiga para a celula da frente
 
             aux.set_coordenadas(posicao_anterior[0], posicao_anterior[1])
             posicao_anterior = posicao_do_aux
@@ -107,7 +116,16 @@ class Cobrinha:
             ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
         else:
             ultimo = self.cobrinha.ultimo
-            ponto = self.get_proxima_posicao(ultimo)
+            ponto = Ponto(ultimo.x, ultimo.y)
+
+            if self.direcao == KEY_UP:
+                ponto.y -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+            elif self.direcao == KEY_DOWN:
+                ponto.y += GRID_SIZE + ESPACO_ENTRE_CELULAS
+            elif self.direcao == KEY_RIGHT:
+                ponto.x -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+            elif self.direcao == KEY_LEFT:
+                ponto.x += GRID_SIZE + ESPACO_ENTRE_CELULAS
 
             # Em caso de terem duas cores na iguais na sequencia,
             # o loop abaixo executara até que as cores sejam diferentes
@@ -116,15 +134,14 @@ class Cobrinha:
 
         self.cobrinha.insere(x=ponto.x, y=ponto.y, cor=cor)
 
-    def get_proxima_posicao(self, posicao_atual):
+    def get_proxima_posicao_da_cabeca(self):
         """
-        Metodo para calcular a nova posicao, dada a posicao atual
-        Args:
-            posicao_atual: instacia da classe Ponto
+        Metodo para calcular a nova posicao da cabeca durante o movinto da cobrinha
+
         Returns:
             Ponto() com a nova coordenada
         """
-        ponto = Ponto(posicao_atual.x, posicao_atual.y)
+        ponto = Ponto(self.cobrinha.primeiro.x, self.cobrinha.primeiro.y)
 
         if self.direcao == KEY_UP:
             ponto.y -= GRID_SIZE + ESPACO_ENTRE_CELULAS
@@ -134,12 +151,27 @@ class Cobrinha:
             ponto.x -= GRID_SIZE + ESPACO_ENTRE_CELULAS
         else:
             ponto.x += GRID_SIZE + ESPACO_ENTRE_CELULAS
+
+        # verificar se a posicao está fora da resolucao da tela
+        # caso tivar, mover a posicao para a lateral oposta
+        if ponto.x < 0:  # se estiver fora da lateral esquerda
+            ponto.x = RESOLUCAO.x - GRID_SIZE
+        elif ponto.x >= RESOLUCAO.x:  # se estiver fora da lateral direita
+            ponto.x = 0
+
+        if ponto.y < 0:  # se estiver fora da lateral de cima
+            ponto.y = RESOLUCAO.y - GRID_SIZE
+        elif ponto.y >= RESOLUCAO.y:  # se estiver fora da lateral de baixo
+            ponto.y = 0
+
         return ponto
 
     def validar_posicao(self, posicao):
         """
-        Metado para
+        Metado para verificar se a posicao da celula é válida e tratar casos inválidos
         """
+        if self.cobrinha.esta_presente(posicao):
+            self.sair()
 
 
 if __name__ == "__main__":

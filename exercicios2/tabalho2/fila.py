@@ -73,6 +73,20 @@ class Fila:
         
         return primeiro
 
+    def esta_presente(self, celula):
+        """
+        Metodo que retorna se uma celula esta na fila
+        Args:
+            celula: objeto da classe classe_no()
+        Returns:
+            boolean que representa se a celula dada esta na fila
+        """
+
+        aux = self._inicio
+        while aux is not None and aux != celula:
+            aux = aux.prox
+        return aux is not None
+
 
 if __name__ == '__main__':
     pass
