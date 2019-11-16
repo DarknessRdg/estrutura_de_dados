@@ -9,7 +9,6 @@ KEY_LEFT = 2
 KEY_RIGHT = 3
 
 GRID_SIZE = 20
-ESPACO_ENTRE_CELULAS = 0
 
 # COLORS
 COLORS = [
@@ -18,7 +17,13 @@ COLORS = [
     (0, 188, 212),  # cyan
     (0, 105, 92),  # teal darken-3
     (255, 111, 0),  # amber_darken-4
-    (255, 214, 0)  # yellow accent-4
+    (255, 214, 0),  # yellow accent-4
+    (100, 221, 23),  # light-green accent-3
+    (78, 52, 46),  # brown darken-4
+    (96, 125, 139),  # blue-grey
+    (221, 44, 0),  # deep-orange accent-4
+    (236, 64, 122),  # pink lighten-1
+
 ]
 
 BACKGROUND_COLOR = (224, 247, 250)

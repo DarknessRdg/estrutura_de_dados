@@ -4,7 +4,7 @@ import pygame
 from config import (
     COLORS, BACKGROUND_COLOR, GRID_SIZE, RESOLUCAO,
     KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_UP,
-    SCREEN, COBRA_CELL_SURFACE, ESPACO_ENTRE_CELULAS,
+    SCREEN, COBRA_CELL_SURFACE,
     GAME_CLOCK)
 
 from fila import Fila
@@ -129,13 +129,13 @@ class Cobrinha:
             ponto = Ponto(ultimo.x, ultimo.y)
 
             if self.direcao == KEY_UP:
-                ponto.y -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+                ponto.y -= GRID_SIZE
             elif self.direcao == KEY_DOWN:
-                ponto.y += GRID_SIZE + ESPACO_ENTRE_CELULAS
+                ponto.y += GRID_SIZE
             elif self.direcao == KEY_RIGHT:
-                ponto.x -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+                ponto.x -= GRID_SIZE
             elif self.direcao == KEY_LEFT:
-                ponto.x += GRID_SIZE + ESPACO_ENTRE_CELULAS
+                ponto.x += GRID_SIZE
 
             # Em caso de terem duas cores na iguais na sequencia,
             # o loop abaixo executara até que as cores sejam diferentes
@@ -152,7 +152,7 @@ class Cobrinha:
         while self.cobrinha.esta_presente(ponto):  # nao permitir colocar comida em cima da cobra
             ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
 
-        self.comidas.insere(x=ponto.x, y=ponto.y + ESPACO_ENTRE_CELULAS, cor=cor)
+        self.comidas.insere(x=ponto.x, y=ponto.y, cor=cor)
 
     def get_proxima_posicao_da_cabeca(self):
         """
@@ -164,13 +164,13 @@ class Cobrinha:
         ponto = Ponto(self.cobrinha.primeiro.x, self.cobrinha.primeiro.y)
 
         if self.direcao == KEY_UP:
-            ponto.y -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+            ponto.y -= GRID_SIZE
         elif self.direcao == KEY_DOWN:
-            ponto.y += GRID_SIZE + ESPACO_ENTRE_CELULAS
+            ponto.y += GRID_SIZE
         elif self.direcao == KEY_LEFT:
-            ponto.x -= GRID_SIZE + ESPACO_ENTRE_CELULAS
+            ponto.x -= GRID_SIZE
         else:
-            ponto.x += GRID_SIZE + ESPACO_ENTRE_CELULAS
+            ponto.x += GRID_SIZE
 
         # verificar se a posicao está fora da resolucao da tela
         # caso tivar, mover a posicao para a lateral oposta
