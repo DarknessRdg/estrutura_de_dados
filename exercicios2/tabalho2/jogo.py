@@ -30,7 +30,7 @@ class Cobrinha:
         self.direcao = KEY_RIGHT
         self.TICK = 10
 
-        for i in range(20):
+        for i in range(50):
             self.add_celula_na_cobra()
 
         for i in range(3):
@@ -196,15 +196,28 @@ class Cobrinha:
                 self.sair()
 
         elif self.comidas.esta_presente(posicao):
-            nova_fila_de_comidas = Fila(class_no=CelulaDaCobra)
-            self.add_celula_na_cobra()
+            self.handle_comer_comida(posicao)
 
-            while self.comidas.esta_vazia() is False:
-                comida = self.comidas.remove()
-                if comida != posicao:
-                    nova_fila_de_comidas.insere(x=comida.x, y=comida.y, cor=comida.cor)
-            self.comidas = nova_fila_de_comidas
-            self.adicionar_comida()
+    def handle_comer_comida(self, posicao_da_comida):
+        """Metodo que trata as acoes quando a cobra comer uma comida"""
+
+        nova_fila_de_comidas = Fila(class_no=CelulaDaCobra)
+
+        while self.comidas.esta_vazia() is False:
+            comida = self.comidas.remove()
+
+            if comida == posicao_da_comida:
+                self.adicionar_comida()
+                if comida.cor == self.cobrinha.primeiro.cor:
+                    self.cobrinha.remove()
+                else:
+                    self.add_celula_na_cobra()
+            else:
+                nova_fila_de_comidas.insere(x=comida.x, y=comida.y, cor=comida.cor)
+
+        if self.cobrinha.esta_vazia():
+            self.sair()
+        self.comidas = nova_fila_de_comidas
 
 
 if __name__ == "__main__":
