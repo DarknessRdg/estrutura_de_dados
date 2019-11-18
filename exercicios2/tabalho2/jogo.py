@@ -1,5 +1,6 @@
 from pygame.locals import QUIT
 import pygame
+import math
 
 from config import (
     COLORS, BACKGROUND_COLOR, GRID_SIZE, RESOLUCAO,
@@ -30,23 +31,38 @@ class Cobrinha:
         self.direcao = KEY_RIGHT
         self.TICK = 10
 
-        for i in range(50):
+        for i in range(3):
             self.add_celula_na_cobra()
 
-        for i in range(3):
-            self.adicionar_comida()
+        for i in range(5):
+            self.add_comida()
 
     def run(self):
         """Metodo que executa loop do jogo"""
 
         while not self.GAME_OVER:
-            GAME_CLOCK.tick(self.TICK)
+            self.atualiza_tick()
             self.verifica_eventos()
             self.atualizar_posicao_da_cobrinha()
             self.atualizar_tela()
             pygame.display.update()
 
         self.sair()
+    
+    def sair(self):
+        """Metodo para finalizar o jogo"""
+
+        self.GAME_OVER = True
+
+    def atualiza_tick(self):
+        """Metodo para aumentar velocidade do jogo de acordo com o tamanho da cobra"""
+        
+        tick = self.TICK + self.TICK * (len(self.cobrinha) / 100) + math.sqrt(len(self.cobrinha))
+        tick = math.floor(tick)
+        if tick > 30:
+            tick = 30
+        
+        GAME_CLOCK.tick(tick)
 
     def verifica_eventos(self):
         """Metodo para tratar o evento do jogo"""
@@ -112,15 +128,15 @@ class Cobrinha:
 
             aux = aux.prox
 
-    def sair(self):
-        """Metodo para finalizar o jogo"""
+    def add_celula_na_cobra(self, cor=None):
+        """
+        Metodo para adicionar uma celula na cobra
+        Args:
+            cor: parametro opcional para a cor da nova celula
+        """
 
-        self.GAME_OVER = True
-
-    def add_celula_na_cobra(self):
-        """Metodo para adicionar uma celula na cobra"""
-
-        cor = elemento_aleatorio(COLORS)
+        if cor is None:
+            cor = elemento_aleatorio(COLORS)
 
         if self.cobrinha.esta_vazia():
             ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
@@ -144,7 +160,7 @@ class Cobrinha:
 
         self.cobrinha.insere(x=ponto.x, y=ponto.y, cor=cor)
 
-    def adicionar_comida(self):
+    def add_comida(self):
         """Metodo para adicionar uma comida em uma posicao aleatoria"""
         cor = elemento_aleatorio(COLORS)
         ponto = posicao_aleatoria(RESOLUCAO, GRID_SIZE)
@@ -207,11 +223,11 @@ class Cobrinha:
             comida = self.comidas.remove()
 
             if comida == posicao_da_comida:
-                self.adicionar_comida()
+                self.add_comida()
                 if comida.cor == self.cobrinha.primeiro.cor:
                     self.cobrinha.remove()
                 else:
-                    self.add_celula_na_cobra()
+                    self.add_celula_na_cobra(cor=comida.cor)
             else:
                 nova_fila_de_comidas.insere(x=comida.x, y=comida.y, cor=comida.cor)
 
