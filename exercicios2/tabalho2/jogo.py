@@ -207,9 +207,10 @@ class Cobrinha:
         Metado para fazer todas as verificacoes da posicao
         """
         if self.cobrinha.esta_presente(posicao):
-            self.cobrinha.remove()  # remove a cabeca
-            if self.cobrinha.esta_vazia():
-                self.sair()
+            self.sair()
+            # self.cobrinha.remove()  # remove a cabeca
+            # if self.cobrinha.esta_vazia():
+            #     self.sair()
 
         elif self.comidas.esta_presente(posicao):
             self.handle_comer_comida(posicao)
