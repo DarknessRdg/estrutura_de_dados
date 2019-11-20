@@ -237,6 +237,6 @@ class Cobrinha:
         self.comidas = nova_fila_de_comidas
 
 
-if __name__ == "__main__":
-    jogo = Cobrinha()
-    jogo.run()
+
+jogo = Cobrinha()
+jogo.run()
