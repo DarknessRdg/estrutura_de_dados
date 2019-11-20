@@ -1,7 +1,9 @@
 import pygame
 import utils
 
-RESOLUCAO = utils.Ponto(1000, 800)
+pygame.init()
+
+RESOLUCAO = utils.Ponto(800, 600)
 
 KEY_UP = 0
 KEY_DOWN = 1
@@ -38,3 +40,5 @@ GAME_CLOCK = pygame.time.Clock()
 
 # SURFACE DE CADA CELULA DA COBRA
 COBRA_CELL_SURFACE = pygame.Surface((GRID_SIZE, GRID_SIZE))
+
+FONT = pygame.font.Font('Arial.ttf', 25)

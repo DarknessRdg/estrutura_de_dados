@@ -6,7 +6,7 @@ from config import (
     COLORS, BACKGROUND_COLOR, GRID_SIZE, RESOLUCAO,
     KEY_DOWN, KEY_LEFT, KEY_RIGHT, KEY_UP,
     SCREEN, COBRA_CELL_SURFACE,
-    GAME_CLOCK)
+    GAME_CLOCK, FONT)
 
 from fila import Fila
 from utils import CelulaDaCobra, Ponto, posicao_aleatoria, elemento_aleatorio
@@ -41,10 +41,13 @@ class Cobrinha:
         """Metodo que executa loop do jogo"""
 
         while not self.GAME_OVER:
+
+
             self.atualiza_tick()
             self.verifica_eventos()
             self.atualizar_posicao_da_cobrinha()
             self.atualizar_tela()
+            self.atualiza_pontos()
             pygame.display.update()
 
         self.sair()
@@ -53,6 +56,16 @@ class Cobrinha:
         """Metodo para finalizar o jogo"""
 
         self.GAME_OVER = True
+    
+    def atualiza_pontos(self):
+        """Metodo que autaliza os pontos na tela"""
+        pontos = len(self.cobrinha)
+        if len(self.cobrinha) <= 3:
+            pontos = 0
+        else:
+            pontos = len(self.cobrinha) - 3
+        score_surface = FONT.render('Pontos: {}'.format(pontos), True, (0, 0, 0))
+        SCREEN.blit(score_surface,(0,0))
 
     def atualiza_tick(self):
         """Metodo para aumentar velocidade do jogo de acordo com o tamanho da cobra"""
@@ -114,7 +127,7 @@ class Cobrinha:
         self.validar_posicao(proxima_posicao)
         # proxima posicao da cabeca (dependendo da direcao atual da cobra)
         # em seguida, chama funcao para verificar se essa nova posicao é uma posicao
-        # já presente na cobrinha, ou seja, está passando por cima dela mesmas
+        # já presente na cobrinha, ou seja, está passando por cima dela mesma
 
         aux.set_coordenadas(proxima_posicao.x, proxima_posicao.y)  # atualiza o primeiro
         aux = aux.prox
