@@ -30,8 +30,7 @@ class Verticie(val id: Int) {
 }
 
 
-class Grafo() {
-    var next: Grafo? = null
+class Grafo {
     var qntAresta = 0
     private set
 
