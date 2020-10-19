@@ -1,6 +1,3 @@
-package contest
-
-
 class Aresta(
         val verticeFinal: Verticie,
         val peso: Int
