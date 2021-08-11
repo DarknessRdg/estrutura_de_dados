@@ -11,8 +11,7 @@ class VerticeNaoEncontradoException(Exception):
 class CaminhoNaoEncontrado(Exception):
     pass
 
-  
-  
+
 class Status(Enum):
     NAO_VISITADO = 1
     VISITADO_PARCIALMENTE = 2
@@ -114,7 +113,7 @@ class Grafo:
 
         for vertice in self.vertices:
             ligacoes.append(
-               str(vertice) + '->' + str(list(map(str, vertice.adjacentes)))
+                str(vertice) + '->' + str(list(map(str, vertice.adjacentes)))
             )
         return '\n'.join(ligacoes)
 
@@ -134,20 +133,20 @@ def main():
 
 
 def load_sem_peso() -> Grafo:
-    return Grafo()\
-        .add(0, 2)\
-        .add(0, 3)\
-        .add(1, 3)\
-        .add(2, 4)\
+    return Grafo() \
+        .add(0, 2) \
+        .add(0, 3) \
+        .add(1, 3) \
+        .add(2, 4) \
         .add(4, 1)
 
 
 def load_com_peso() -> Grafo:
-    return Grafo()\
-        .add(0, 2, 11)\
-        .add(0, 3, 3)\
-        .add(1, 3, 42)\
-        .add(2, 4, 7)\
+    return Grafo() \
+        .add(0, 2, 11) \
+        .add(0, 3, 3) \
+        .add(1, 3, 42) \
+        .add(2, 4, 7) \
         .add(4, 1, 3)
 
 
