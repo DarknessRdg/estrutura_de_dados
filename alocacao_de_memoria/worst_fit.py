@@ -47,6 +47,7 @@ def get_worst() -> Optional[AreaLivre]:
             indice += 1
             continue
 
+        # ------------------------ area livre --------
         area_livre_temp = AreaLivre(inicio=indice)
 
         while indice < TAMANHO_DA_MEMORIA and MEMORIA[indice].vazia:
