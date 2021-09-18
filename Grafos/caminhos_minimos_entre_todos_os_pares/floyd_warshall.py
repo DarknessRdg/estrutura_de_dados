@@ -47,9 +47,6 @@ class Grafo:
         _from = self.get_vertice(_from)
         to = self.get_vertice(to)
 
-        # prim so funciona com grafos não dirigidos, portanto ambos os
-        # vertices podem ir e voltar para ambos
-        # a -> b , assim como, a <- b
         _from.arestas.add(Aresta(to=to, peso=peso))
         return self
 
