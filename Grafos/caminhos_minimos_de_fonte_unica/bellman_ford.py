@@ -1,4 +1,5 @@
-from copy import deepcopy
+import heapq
+
 
 INFINITO = float('infinity')
 
@@ -6,6 +7,8 @@ INFINITO = float('infinity')
 class Vertice(object):
     def __init__(self, representacao):
         self.rep = representacao
+        self.pai = None
+        self.peso = INFINITO
         self.arestas = set()
 
     def __hash__(self):
@@ -63,76 +66,87 @@ class Grafo:
         return vertice
 
 
-class FloydWarshall:
+class BellmanFord:
     def __init__(self, grafo: Grafo):
-        self.vertices = sorted(grafo.vertices, key=lambda it: it.rep)
-        self.quantidade_de_vertices = len(self.vertices)
-        self.matriz = []
+        self.grafo = grafo
+        self.queue = FilaHeap(key=lambda it: it.peso)
 
-    def _initi_matriz(self):
-        self.matriz = [
-            [INFINITO for _ in range(self.quantidade_de_vertices)]
-            for _ in range(self.quantidade_de_vertices)
-        ]
+    def clean_vertices(self, source: Vertice):
+        for vertice in self.grafo.vertices:
+            vertice.pai = None
+            vertice.peso = INFINITO
+            self.queue.push(vertice)
+        source.peso = 0
 
-        for vertice in self.vertices:
-            indice_vertice = self.vertices.index(vertice)
+    def run(self, source, to):
+        source = self.grafo.get_vertice(source)
+        to = self.grafo.get_vertice(to)
 
+        self.clean_vertices(source)
+        while not self.queue.is_empty():
+            vertice = self.queue.pop()
+            self.relaxa_arestas(vertice)
+
+        self.verifica_se_tem_ciclo_negativo()
+        return self.build_path(to)
+
+    def build_path(self, end: Vertice):
+        path = [end]
+
+        current = end
+        while current.pai is not None:
+            path.append(current.pai)
+            current = current.pai
+        return path[::-1]
+
+    def relaxa_arestas(self, vertice: Vertice):
+        for aresta in vertice.arestas:
+            custo = vertice.peso + aresta.peso
+
+            if custo < aresta.to.peso:
+                aresta.to.peso = custo
+                aresta.to.pai = vertice
+
+    def verifica_se_tem_ciclo_negativo(self):
+        for vertice in self.grafo.vertices:
             for aresta in vertice.arestas:
-                indice_aresta = self.vertices.index(aresta.to)
+                custo = vertice.peso + aresta.peso
 
-                self.matriz[indice_vertice][indice_aresta] = aresta.peso
+                if custo < aresta.to.peso:
+                    raise Exception("Tem ciclco negativo")
 
-    def run(self):
-        self._initi_matriz()
-        for coluna in range(self.quantidade_de_vertices):
-            self.relaxa(coluna)
 
-    def relaxa(self, coluna):
-        for j in range(self.quantidade_de_vertices):
-            valor_da_coluna = self.matriz[j][coluna]
+class FilaHeap(object):
+    """
+    A fila heap aqui foi implementada utilizando ordenação comum para ser
+    mais simples, mas é apenas para fins didáticos como mencionado.
+    """
+    def __init__(self, key):
+        self.items = []
+        self.key = key
 
-            for i in range(self.quantidade_de_vertices):
-                valor_da_linha = self.matriz[coluna][i]
+    def push(self, obj):
+        self.items.append(obj)
 
-                if not self._da_para_somar(valor_da_coluna, valor_da_linha):
-                    continue
-                if not self._pode_alterar(j, i):
-                    continue
+    def pop(self):
+        self.items.sort(key=self.key, reverse=True)
+        # ordena os elementos do maior para o menor
+        # e por fim retorna o último elemento da lista
+        # simulando uma fila de prioridades, ou fila heap
+        return self.items.pop()
 
-                custo = valor_da_coluna + valor_da_linha
-                if custo < self.matriz[j][i]:
-                    self.matriz[j][i] = custo
+    def is_empty(self) -> bool:
+        return not bool(self.items)
 
-    def _da_para_somar(self, a, b):
-        if INFINITO == a or INFINITO == b:
-            return False
-        return True
-
-    def _pode_alterar(self, i, j):
-        diagonal_principal = i == j
-        return not diagonal_principal
-
-    def get_matriz_com_repr(self):
-        matriz = deepcopy(self.matriz)
-
-        for i, linha in enumerate(matriz):
-            linha.insert(0, self.vertices[i].rep)
-        matriz.insert(0, self.vertices)
-        matriz[0].insert(0, ' ')
-        return matriz
+    def contains(self, item):
+        return item in self.items
 
 
 if __name__ == '__main__':
     grafo = Grafo()
-    grafo.add('A', 'B', 3).add('A', 'C', 4) \
-        .add('B', 'D', 5) \
-        .add('D', 'A', 8) \
-        .add('C', 'D', 3)
+    grafo.add('A', 'D', 2).add('A', 'B', 4).add('B', 'D', 3).add('D', 'B', 1) \
+        .add('B', 'C', 2).add('B', 'E', 3).add('D', 'C', 4).add('D', 'E', 5) \
+        .add('E', 'C', -5)
 
-    floyd = FloydWarshall(grafo)
-    floyd.run()
-
-    for i in floyd.get_matriz_com_repr():
-        print(i)
-
+    path = BellmanFord(grafo).run('A', 'E')
+    print(path)
