@@ -109,6 +109,7 @@ class Rotulacao:
         while source.existe_aresta_valida:
             max_found = self.find_max_path(source, target)
             total.append(max_found)
+        print(total)
         return sum(total)
 
     def find_max_path(
@@ -198,3 +199,40 @@ if __name__ == '__main__':
             .add('v2', 'v1', 5)\
             .add('v1', 'v3', 10)
     ).run('s', 'v1') == 21
+
+    current = Rotulacao(
+        Grafo().add('s', 'a', 50).add('s', 'c', 40)\
+        .add('c', 'b', 70).add('c', 'd', 60)\
+        .add('a', 'b', 60)\
+        .add('b', 't', 30)\
+        .add('d', 't', 50)
+    ).run('s', 't')
+    assert current == 70, f"Obtido: {current}"
+
+    current = Rotulacao(
+        Grafo().add('s', 'v1', 16).add('s', 'v2', 13)\
+        .add('v1', 'v3', 12)\
+        .add('v2', 'v1', 4).add('v2', 'v4', 14)\
+        .add('v3', 't', 20).add('v3', 'v2', 9)\
+        .add('v4', 'v3', 7).add('v4', 't', 4)
+    ).run('s', 't')
+    assert current == 23, f"Obtido: {current}"
+
+    current = Rotulacao(
+        Grafo().add(0,  3, 2).add(0, 2, 3).add(0, 1, 2)\
+        .add(1, 3, 1).add(1, 4, 1)\
+        .add(2, 1, 1).add(2, 5, 2)\
+        .add(3, 4, 2).add(3, 5, 3)\
+        .add(4, 2, 1).add(4, 2, 5)
+    ).run(0, 5)
+    assert current == 6, f"Obtido: {current}"
+
+    current = Rotulacao(
+        Grafo().add('s', '1', 4).add('s', '3', 3).add('s', '2', 7)\
+            .add('1', '2', 1).add('1', '4', 2)\
+            .add('2', '4', 4).add('2', '5', 4)\
+            .add('3', '5', 3)\
+            .add('4', 't', 8)\
+            .add('5', '4', 1).add('5', 't', 6)
+    ).run('s', 't')
+    assert current == 13, f"Obtido: {current}"
