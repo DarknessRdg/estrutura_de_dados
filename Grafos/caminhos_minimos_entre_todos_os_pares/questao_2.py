@@ -119,6 +119,18 @@ class FloydWarshall:
         matriz[0].insert(0, ' ')
         return matriz
 
+    def mostrar_todos_os_caminhos_minimos(self):
+        for indice_v in range(self.quantidade_de_vertices):
+            print('Caminhos de', self.vertices[indice_v])
+
+            for indice_para in range(self.quantidade_de_vertices):
+                if indice_para == indice_v:
+                    continue
+                print('Para:', self.vertices[indice_para], 'peso de',
+                      self.matriz[indice_v][indice_para])
+
+            print('---')
+
 
 if __name__ == '__main__':
     grafo = Grafo()
